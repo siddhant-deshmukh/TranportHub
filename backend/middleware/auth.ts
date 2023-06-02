@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken'
-import User from './models/users';
+import User from '../models/users';
 
 const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
   try {

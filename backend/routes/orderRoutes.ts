@@ -40,6 +40,7 @@ router.post('/', auth,
   body('to').isString().isLength({ max: 100, min: 1 }).trim().exists(),
   body('from').isString().isLength({ max: 100, min: 1 }).trim().exists(),
   body('address').isString().isLength({ max: 200, min: 1 }).trim().exists(),
+  body('order_id').isString().trim().exists().isLength({max:5, min:1}).custom(()=>{}),
   body('transporter_id').isString().trim().exists(),
   body('quantity').isNumeric().exists(),
   body('price').isNumeric().exists(),
@@ -74,11 +75,11 @@ router.post('/', auth,
       return res.status(500).json({ msg: 'Some internal error occured', err })
     }
   })
-router.get('/:order_id', auth, async (req, res) => {
+router.get('/:_id', auth, async (req, res) => {
   try {
-    const order_id = req.params['order_id']
-    if (!order_id) return res.status(400).json({ msg: 'order id required' })
-    const check_order = await Order.findById(order_id)
+    const _id = req.params['_id']
+    if (!_id) return res.status(400).json({ msg: 'order id required' })
+    const check_order = await Order.findById(_id)
     if (!check_order) return res.status(404).json({ msg: 'order not found' })
 
     if (check_order.manufacturer_id.toString() != res.user._id.toString() && check_order.transporter_id?.toString() != res.user._id.toString())
@@ -90,7 +91,7 @@ router.get('/:order_id', auth, async (req, res) => {
   }
 })
 
-router.put('/:order_id',
+router.put('/:_id',
   body('title').isString().isLength({ max: 100, min: 1 }).trim().optional(),
   body('to').isString().isLength({ max: 100, min: 1 }).trim().optional(),
   body('from').isString().isLength({ max: 100, min: 1 }).trim().optional(),
@@ -102,10 +103,10 @@ router.put('/:order_id',
   validate,
   auth, async (req, res) => {
     try {
-      const order_id = req.params['order_id']
-      if (!order_id) return res.status(400).json({ msg: 'order id required' })
+      const _id = req.params['_id']
+      if (!_id) return res.status(400).json({ msg: 'order id required' })
       
-      const check_order = await Order.findById(order_id)
+      const check_order = await Order.findById(_id)
       if (!check_order) return res.status(404).json({ msg: 'order not found' })
       if (check_order.manufacturer_id.toString() != res.user._id.toString() && check_order.transporter_id?.toString() != res.user._id.toString())
       return res.status(401).json({ msg: 'Not allowed' });
@@ -119,7 +120,7 @@ router.put('/:order_id',
           return res.status(405).json({ msg: 'Manufacturer can not edit price of order' });
       }
 
-      await Order.findByIdAndUpdate(order_id,{
+      await Order.findByIdAndUpdate(_id,{
         title, 
         to, 
         from,
@@ -131,14 +132,14 @@ router.put('/:order_id',
       })
 
       const text = `${res.user.name} changed ${(quantity)?'quantity':''})  ${(address)?'address':''}) ${(unit)?'unit':''}) ${(to | from) ?'some data':''}) `
-      addMsg(order_id,res.user._id,text)
+      addMsg(_id,res.user._id,text)
 
       return res.status(200).json({ msg: 'Successfull'});
     } catch (err) {
       return res.status(500).json({ msg: 'Some internal error occured', err })
     }
   })
-router.delete('/:order_id', auth, (req, res) => {
+router.delete('/:_id', auth, (req, res) => {
 
 })
 

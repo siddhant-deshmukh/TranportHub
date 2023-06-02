@@ -4,6 +4,7 @@ import mongoose, { Types } from "mongoose";
 
 export interface IOrderCreate {
   title?: string,
+  order_id: string,
   manufacturer_id: Types.ObjectId,
   transporter_id?: Types.ObjectId,
   to: string,
@@ -22,6 +23,7 @@ export interface IOrderStored extends IOrderCreate {
 
 const orderSchema = new mongoose.Schema<IOrderStored>({
   title : {type: String, maxlength:100},
+  order_id : {type: String, index:true, required:true},
   manufacturer_id : {type: mongoose.SchemaTypes.ObjectId, index:true, required:true},
   transporter_id : {type: mongoose.SchemaTypes.ObjectId, index:true, required:true},
   last_activity : {type: Date, index:true, default: new Date()},

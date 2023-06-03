@@ -17,11 +17,8 @@ export interface IUserCreate {
   password?: string,
   user_type: 'manufacturer' | 'transporter'
 }
-export interface IUserStored extends IUserSnippet {
+export interface IUserStored extends IUserCreate {
   _id: Types.ObjectId,
-  emailVerfied: boolean,
-  email: string,
-  password?: string,
 } 
 
 const userSchema = new mongoose.Schema<IUserStored>({

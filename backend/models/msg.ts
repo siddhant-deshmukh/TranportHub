@@ -1,18 +1,14 @@
 import mongoose, { Types } from "mongoose";
 
-export interface IMsgStored {
-  _id: Types.ObjectId,
-  time: Date,
-  text: string,
-  Order_Id: Types.ObjectId,
-  author_id: Types.ObjectId,
-}
 
 export interface IMsgCreate {
   time: Date,
   text: string,
   Order_Id: Types.ObjectId,
   author_id: Types.ObjectId,
+}
+export interface IMsgStored extends IMsgCreate {
+  _id: Types.ObjectId,
 }
 
 const orderSchema = new mongoose.Schema<IMsgStored>({

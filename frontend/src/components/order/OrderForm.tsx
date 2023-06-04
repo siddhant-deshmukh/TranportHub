@@ -40,9 +40,12 @@ const OrderForm = ({ setOrdersList }: {
         console.log(status, data)
         if(data?.order?._id){
           setOrdersList((prev)=>{
-            return [data?.order].concat([...prev])
+            const list = [data?.order].concat([...prev])
+            console.log(list)
+            return list
           })
         }
+        setToggle(true)
       }).catch((err) => {
         console.error('While uploading order', err)
 
@@ -50,7 +53,7 @@ const OrderForm = ({ setOrdersList }: {
   }
 
   return (
-    <div className='max-w-lg'>
+    <div className='w-[500px]'>
 
       <button
         onClick={() => { setToggle(prev => !prev) }}
@@ -63,7 +66,7 @@ const OrderForm = ({ setOrdersList }: {
 
       <form
         onSubmit={onFormSubmit}
-        className={`order-form  ${toggle ? 'hidden' : ''} w-full  flex flex-col space-y-3 p-7 border-2 shadow-xl rounded-xl`}>
+        className={`order-form  ${toggle ? 'hidden' : ''} w-full bg-white flex flex-col space-y-3 p-7 border-2 shadow-xl rounded-xl`}>
         {
           errorMsg.length > 0 && <ErrorMsg setErrorMsg={setErrorMsg} errorMsg={errorMsg} />
         }

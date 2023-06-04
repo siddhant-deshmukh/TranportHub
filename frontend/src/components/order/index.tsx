@@ -8,16 +8,18 @@ const OrderDashboard = () => {
   const [ordersList, setOrdersList] = useState<IOrder[]>([])
   useEffect(() => {
     getOrdersList(5, 0)
-      .then((ordersList)=>{
+      .then((ordersList) => {
         setOrdersList(ordersList)
-      }).catch((err)=>{
+      }).catch((err) => {
         console.error("Something wrong in ordersList")
       })
   }, [])
   return (
-    <div>
-      <OrderForm setOrdersList={setOrdersList}/>
+    <div className='relative h-full w-full  pt-14 px-2 pb-20'>
       <OrdersList setOrdersList={setOrdersList} ordersList={ordersList} />
+      <div className='absolute min-w-fit right-0 top-4'>
+        <OrderForm setOrdersList={setOrdersList} />
+      </div>
     </div>
   )
 }

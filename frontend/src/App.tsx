@@ -12,11 +12,8 @@ function App() {
      
     </div>
   } else if(user){
-    return <div className="max-w-7xl mx-auto">
+    return <div className="max-w-7xl mx-auto h-screen  overflow-hidden">
       <NavBar />
-      {
-        JSON.stringify(user)
-      }
       <OrderDashboard />
     </div>
   }

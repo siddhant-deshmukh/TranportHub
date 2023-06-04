@@ -172,4 +172,21 @@ router.get('/logout', async function (req: Request, res: Response, next: NextFun
   }
 })
 
+router.get('/transporters',auth, async function (req, res) {
+  try {
+
+    const data = await User.aggregate([
+      {$match : {user_type : 'transporter'}},
+      {$sort : {name : 1}},
+      {$project : {
+        name : 1
+      }}
+    ])
+
+    return res.status(201).json({ data })
+
+  } catch (err) {
+    return res.status(500).json({ msg: 'Some internal error occured', err })
+  }
+})
 export default router

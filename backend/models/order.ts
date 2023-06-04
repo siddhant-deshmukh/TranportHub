@@ -1,7 +1,7 @@
 import mongoose, { Types } from "mongoose";
 
 
-
+ 
 export interface IOrderCreate {
   title?: string,
   order_id: string,
@@ -23,7 +23,7 @@ export interface IOrderStored extends IOrderCreate {
 
 const orderSchema = new mongoose.Schema<IOrderStored>({
   title : {type: String, maxlength:100},
-  order_id : {type: String, index:true, required:true},
+  order_id : {type: String, unique:true},
   manufacturer_id : {type: mongoose.SchemaTypes.ObjectId, index:true, required:true},
   transporter_id : {type: mongoose.SchemaTypes.ObjectId, index:true, required:true},
   last_activity : {type: Date, index:true, default: new Date()},
@@ -33,7 +33,7 @@ const orderSchema = new mongoose.Schema<IOrderStored>({
   address : {type: String, required:true, maxlength:200},
   quantity : {type: Number, required:true},
   unit : {type: String, enum:['ton'],required:true},
-  price : {type: Number, required:true},
+  price : {type: Number},
   status : {type: String, enum:['proposed','accepted','cancelled'],required:true},
 })
 

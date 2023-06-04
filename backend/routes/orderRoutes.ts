@@ -36,27 +36,30 @@ router.get('/', auth, async (req, res) => {
 })
 
 router.post('/', auth,
-  body('title').isString().isLength({ max: 100, min: 1 }).trim(),
+  body('order_id').isString().trim().exists().isLength({max:5, min:1}).exists(),
+  body('title').optional().isString().isLength({ max: 100, min: 1 }).trim(),
   body('to').isString().isLength({ max: 100, min: 1 }).trim().exists(),
   body('from').isString().isLength({ max: 100, min: 1 }).trim().exists(),
   body('address').isString().isLength({ max: 200, min: 1 }).trim().exists(),
-  body('order_id').isString().trim().exists().isLength({max:5, min:1}).custom(()=>{}),
   body('transporter_id').isString().trim().exists(),
   body('quantity').isNumeric().exists(),
-  body('price').isNumeric().exists(),
   body('unit').isString().isIn(['ton']).exists(),
+  body('price').optional().isNumeric(),
   validate,
   async (req, res) => {
     try {
       if (res.user.user_type === 'transporter')
         return res.status(405).json({ msg: 'transporter not allowed to create order' });
 
-      const { title, to, from, address, quantity, unit, price, transporter_id } : IOrderCreate = req.body
+      const { title, to, from, address, quantity, unit, price, transporter_id, order_id } : IOrderCreate = req.body
 
       const check_transporter = await User.findById(transporter_id)
       if (!check_transporter)
         return res.status(404).json({ msg: 'transporter not found' });
-
+      const check_order_id = await Order.find({order_id})
+      if(check_order_id.length > 0){
+        return res.status(409).json({ msg: 'order_id already used' });
+      }
 
       const order = await Order.create({
         title,
@@ -68,6 +71,7 @@ router.post('/', auth,
         price,
         transporter_id,
         manufacturer_id: res.user._id,
+        order_id,
         status: 'proposed',
       })
       return res.status(201).json({ msg: 'Successfull', order })

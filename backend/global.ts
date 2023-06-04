@@ -1,4 +1,4 @@
-import { IUser } from "./models/users";
+import { IUserStored } from "./models/users";
 
 export {};
 
@@ -7,7 +7,7 @@ declare global {
         export interface Response {
             jsonStatusOk: (obj: any) => void;
             jsonStatusError: (obj: any) => void;
-            user: IUser
+            user: IUserStored
         }
     }
 }

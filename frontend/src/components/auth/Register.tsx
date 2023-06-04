@@ -103,7 +103,7 @@ const Register = () => {
           id="user_type"
           name="user_type"
           className="form-select">
-          <option className='w-full p-2' value={'manufacturer'} selected>Manufacturer</option>
+          <option className='' value={'manufacturer'}>Manufacturer</option>
           <option className='' value="transporter">Transporter</option>
         </select>
       </div>

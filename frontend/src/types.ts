@@ -12,7 +12,7 @@ export interface IOrder {
   manufacturer_id: string,
   transporter_id?: string,
   to: string,
-  from: string,
+  from: string, 
   address: string,
   quantity: number,
   unit: 'ton',

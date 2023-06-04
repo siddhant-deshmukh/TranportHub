@@ -47,7 +47,7 @@ const Login = () => {
   }
 
   return (
-    <form onSubmit={onFormSubmit}>
+    <form className="auth-form" onSubmit={onFormSubmit}>
       {
         errorMsg.length > 0 && <ErrorMsg setErrorMsg={setErrorMsg} errorMsg={errorMsg}/>
       }

@@ -2,7 +2,7 @@ import auth from '../middleware/auth'
 import dotenv from 'dotenv';
 import express, { NextFunction, Request, Response } from 'express'
 import User, { IUserCreate, IUserStored } from '../models/users';
-import Order from '../models/order';
+import Order, { IOrderCreate } from '../models/order';
 import { body } from 'express-validator';
 import validate from '../middleware/validate';
 import { addMsg } from './msgRoutes';
@@ -28,7 +28,7 @@ router.get('/', auth, async (req, res) => {
         .sort({'last_activity':-1})
         .skip(skipNum)
         .limit(limitDocs)
-      return res.status(200).json({orders})
+      return res.status(200).json({orders}) 
     }
   } catch (err) {
     return res.status(500).json({ msg: 'Some internal error occured', err })
@@ -51,7 +51,7 @@ router.post('/', auth,
       if (res.user.user_type === 'transporter')
         return res.status(405).json({ msg: 'transporter not allowed to create order' });
 
-      const { title, to, from, address, quantity, unit, price, transporter_id } = req.body
+      const { title, to, from, address, quantity, unit, price, transporter_id } : IOrderCreate = req.body
 
       const check_transporter = await User.findById(transporter_id)
       if (!check_transporter)

@@ -29,30 +29,28 @@ router.post('/register',
   body('email').exists().isEmail().isLength({ max: 50, min: 3 }).toLowerCase().trim(),
   body('name').exists().isString().isLength({ max: 50, min: 3 }).toLowerCase().trim(),
   body('password').exists().isString().isLength({ max: 20, min: 5 }).trim(),
+  body('address').exists().isString().isLength({ max: 200, min: 5 }).trim(),
   body('user_type').exists().isIn(['manufacturer', 'transporter']),
   validate,
   async function (req: Request, res: Response, next: NextFunction) {
     try {
 
-      const { email, name, password, user_type }: {
-        email: string,
-        name: string,
-        password: string,
-        user_type: 'manufacturer' | 'transporter'
-      } = req.body;
+      const { email, name, password, user_type, address }: IUserCreate = req.body;
 
       const checkEmail = await User.findOne({ email });
 
       if (checkEmail) return res.status(409).json({ msg: 'User already exists!' });
 
       // this will do the hashing and encrupt the password before storing it in the database
+      //@ts-ignore
       const encryptedPassword = await bcrypt.hash(password, 15)
       console.log(password, encryptedPassword)
       const newUser: IUserStored = await User.create({
         email,
         name,
         password: encryptedPassword,
-        user_type
+        user_type,
+        address
       })
 
       // in token mongodb object _id will be stored. After 2h token will expire 

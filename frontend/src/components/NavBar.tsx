@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import AppContext from '../AppContext'
 import axios from 'axios'
 
@@ -16,12 +16,6 @@ const NavBar = () => {
             <div className='absolute' hidden={!btnToggle}>
 
             </div>
-          </div>
-        }
-        {
-          !user && <div className='flex space-x-4'>
-            <button>Login</button>
-            <button>Register</button>
           </div>
         }
         {

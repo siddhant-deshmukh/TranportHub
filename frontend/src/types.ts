@@ -2,7 +2,8 @@ export interface IUser {
   _id: string,
   name: string,
   email: string,
-  user_type: 'manufacturer' | 'transporter'
+  user_type: 'manufacturer' | 'transporter',
+  address: string,
 }
 export interface IOrder {
   _id: string,

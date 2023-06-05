@@ -12,7 +12,6 @@ var router = express.Router();
 
 router.get('/', auth, async (req, res) => {
   try {
-
     const { skip , limit} = req.query
     let skipNum = (skip && typeof skip === 'string' && parseInt(skip) && parseInt(skip) > 0)?parseInt(skip):0
     let limitDocs = (limit && typeof limit === 'string' && parseInt(limit) && parseInt(limit) > 1 )?parseInt(limit):5
@@ -134,7 +133,11 @@ router.put('/:_id',
         last_activity : new Date()
       })
 
-      const text = `${res.user.name} changed ${(quantity)?'quantity':''})  ${(address)?'address':''}) ${(unit)?'unit':''}) ${(to | from) ?'some data':''}) `
+      let text = `${res.user.name} changed \n`
+      text += `${(quantity && unit && (quantity !== check_order.quantity || unit !== check_order.unit))?`quantity from ${check_order.quantity} ${check_order.unit} to ${quantity}  ${unit}`:``}\n` 
+      text += `${(address && address !== check_order.address)?`\naddress from \n\n${check_order.address}\n\n to \n${address}\n`:''}` 
+      text += `${(price && price !== check_order.price)?`price ${(check_order.price)?'from ${check_order.price}': ''}  to ${price} inr`:''}` 
+
       addMsg(_id,res.user._id,text)
 
       return res.status(200).json({ msg: 'Successfull'});

@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import orderRouter from './routes/orderRoutes'
 import userRouter from './routes/userRoutes'
+import msgRouter from './routes/msgRoutes'
 
 dotenv.config();
 
@@ -20,8 +21,9 @@ mongoose.connect(process.env.MONGODB_ATLAS_URL as string)
   .then(()=>{console.log("Connected to database")})
   .catch((err)=>{console.error("Unable to connect database",err)})
 
-app.use('/order',orderRouter)
-app.use('/u',userRouter)
+  app.use('/u',userRouter)
+  app.use('/msg',msgRouter)
+  app.use('/order',orderRouter)
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);

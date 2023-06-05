@@ -5,7 +5,7 @@ export interface IUser {
   user_type: 'manufacturer' | 'transporter',
   address: string,
 }
-export interface IOrder {
+export interface IOrder { 
   _id: string,
   title?: string,
   order_id: string,

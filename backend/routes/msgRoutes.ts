@@ -26,15 +26,18 @@ router.get('/:_id', auth, async (req, res) => {
     let skipNum = (skip && typeof skip === 'string' && parseInt(skip) && parseInt(skip) > 0) ? parseInt(skip) : 0
     let limitDocs = (limit && typeof limit === 'string' && parseInt(limit) && parseInt(limit) > 1) ? parseInt(limit) : 5
 
-    const msgs = await Msg.find({ _id: new Types.ObjectId(_id) })
-      .sort({ 'time': -1 })
+    // console.log(skipNum, limitDocs)
+
+    const msgs = await Msg.find({ Order_Id : new Types.ObjectId(_id) })
+      .sort({ 'time': 1 })
       .skip(skipNum)
-      .limit(limitDocs)
+      .limit(10)
     return res.status(200).json({ msgs })
   } catch (err) {
     return res.status(500).json({ msg: 'Some internal error occured', err })
   }
 })
+
 router.post('/:_id',
   body('text').isString().isLength({ max: 400, min: 1 }).trim().exists(),
   validate,
@@ -56,14 +59,17 @@ router.post('/:_id',
       return res.status(200).json({ msg })
     } catch (err) {
       return res.status(500).json({ msg: 'Some internal error occured', err })
-    }
+    } 
   })
 
 export async function addMsg(_id: Types.ObjectId | string, author_id: Types.ObjectId, text: string) {
   const msg = await Msg.create({
     text,
     author_id,
-    Order_Id: _id 
+    Order_Id: _id, 
+    time: new Date()
   })
   return msg
 }
+
+export default router

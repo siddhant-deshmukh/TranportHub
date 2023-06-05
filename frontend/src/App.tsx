@@ -3,6 +3,7 @@ import AppContext from "./AppContext"
 import NavBar from "./components/NavBar"
 import Auth from "./components/auth"
 import OrderDashboard from "./components/order"
+import Modal from "./components/Modal"
 
 function App() {
   const { user, authLoading } = useContext(AppContext)
@@ -15,6 +16,8 @@ function App() {
     return <div className="max-w-7xl flex flex-col mx-auto h-screen  overflow-hidden">
       <NavBar />
       <OrderDashboard />
+      <Modal />
+      
     </div>
   }
   return (

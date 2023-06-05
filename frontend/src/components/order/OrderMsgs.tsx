@@ -1,22 +1,18 @@
 import { useContext } from "react"
-import { IOrder } from "../../types"
 import AppContext from "../../AppContext"
 
 
-const OrderMsgs = ({ orderMsgs, setOrderMsgs }: {
-  orderMsgs: IOrder | null,
-  setOrderMsgs: React.Dispatch<React.SetStateAction<IOrder | null>>
-}) => {
-  const { user } = useContext(AppContext)
+const OrderMsgs = () => { 
+  const { user, selectedOrder, setModalType, setSelectedOrder } = useContext(AppContext)
   return (
-    <div className="w-full h-full max-h-full flex flex-col overflow-y-auto border relative pb-16 lg:pb-0 bg-green-50">
+    <div className="w-full h-full max-h-full flex flex-col overflow-y-auto border relative pb-0 lg:pb-0 bg-green-50">
       {/* <div className="h-full">
         {orderMsgs?._id}
       </div> */}
       <div className="flex items-center w-full bg-green-600 text-white">
         <button 
           className="p-3 hover:text-blue-100"
-          onClick={()=>{setOrderMsgs(null)}}>
+          onClick={()=>{setModalType(null); setSelectedOrder(null)}}>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
@@ -24,13 +20,13 @@ const OrderMsgs = ({ orderMsgs, setOrderMsgs }: {
         <div className="text-2xl w-full font-bold pl-5">
           {
             user?.user_type === 'manufacturer' &&
-            <div className="">{orderMsgs?.from}</div>
+            <div className="">{selectedOrder?.from}</div>
           }
           {
             user?.user_type === 'transporter' &&
-            <div className="">{orderMsgs?.to}</div>
+            <div className="">{selectedOrder?.to}</div>
           }
-          <div className="text-sm">{orderMsgs?.order_id}</div>
+          <div className="text-sm">{selectedOrder?.order_id}</div>
           <span></span>
         </div>
 

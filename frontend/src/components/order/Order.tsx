@@ -1,22 +1,22 @@
 // import { useContext, useState } from "react"
+import { useContext } from "react"
 import { IOrder } from "../../types"
+import AppContext from "../../AppContext"
 // import AppContext from "../../AppContext"
 
-const Order = ({ order, setEditOrder, setOrderMsgs }: {
+const Order = ({ order }: {
   order: IOrder,
-  setEditOrder: React.Dispatch<React.SetStateAction<IOrder | null>>,
-  setOrderMsgs: React.Dispatch<React.SetStateAction<IOrder | null>>
 }) => {
-  // const [editable, setEditable] = useState<boolean>(false)
-  // const { user } = useContext(AppContext)
+
+  const { setModalType, setSelectedOrder } = useContext(AppContext)
 
   return (
     <div
       onClick={(event) => {
         //@ts-ignore
         if (event.target.name === 'btn') return
-        setEditOrder(null)
-        setOrderMsgs(order)
+        setModalType('messages')
+        setSelectedOrder(order)
         console.log("ONclick div")
       }}
       className="order-container group hover:cursor-pointer hover:bg-gray-50 flex flex-col border-2 max-w-[700px] p-5 rounded-xl ">
@@ -65,7 +65,7 @@ const Order = ({ order, setEditOrder, setOrderMsgs }: {
       <h1 className="text-right">Price: {(order.price) ? (order.price) : ' -- '}</h1> */}
 
       <button
-        onClick={() => { setEditOrder(order) }}
+        onClick={() => { setModalType('update-order'); setSelectedOrder(order) }}
         name="btn"
         className="w-fit  ml-auto mt-4 py-2 px-24 mx-auto hover:bg-green-600 text-center rounded-xl bg-green-500 font-semibold text-white">
         Edit

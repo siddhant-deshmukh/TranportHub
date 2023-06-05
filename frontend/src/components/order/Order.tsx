@@ -1,77 +1,76 @@
+// import { useContext, useState } from "react"
 import { IOrder } from "../../types"
+// import AppContext from "../../AppContext"
 
-const Order = ({ order }: {
-  order: IOrder
+const Order = ({ order, setEditOrder, setOrderMsgs }: {
+  order: IOrder,
+  setEditOrder: React.Dispatch<React.SetStateAction<IOrder | null>>,
+  setOrderMsgs: React.Dispatch<React.SetStateAction<IOrder | null>>
 }) => {
+  // const [editable, setEditable] = useState<boolean>(false)
+  // const { user } = useContext(AppContext)
+
   return (
-    <div className="order-container flex flex-col border-2 max-w-[700px] p-5 rounded-xl ">
-      <div className="">
-        <label htmlFor="order_id" className="mb-0.5 ml-1">Order Id</label>
-        <input
-          disabled={true}
-          type="text"
-          defaultValue={order.order_id}
-          name='name'
-          minLength={1}
-          maxLength={30}
-          className="form-input" />
-      </div>
-      <div className="flex space-x-4 mt-1 mb-10">
-        <div>
-          <label htmlFor="order_id" className="mb-0.5 ml-1">To</label>
-          <input
-            disabled={true}
-            type="text"
-            defaultValue={order.to}
-            className="form-input" />
-        </div>
-        <div>
-          <label htmlFor="order_id" className="mb-0.5 ml-1">From</label>
-          <input
-            disabled={true}
-            type="text"
-            defaultValue={order.from}
-            className="form-input" />
-        </div>
-      </div>
-      <div className="flex space-x-4">
-        <div className="">
-          <label htmlFor="order_id" className="mb-0.5 ml-1">Quantity</label>
-          <input
-            disabled={true}
-            type="text"
-            defaultValue={order.quantity}
-            className="form-input" />
-        </div>
-        <div className="">
-          <label htmlFor="order_id" className="mb-0.5 ml-1">Unit</label>
-          <input
-            disabled={true}
-            type="text"
-            defaultValue={order.unit}
-            className="form-input" />
-        </div>
+    <div
+      onClick={(event) => {
+        //@ts-ignore
+        if (event.target.name === 'btn') return
+        setEditOrder(null)
+        setOrderMsgs(order)
+        console.log("ONclick div")
+      }}
+      className="order-container group hover:cursor-pointer hover:bg-gray-50 flex flex-col border-2 max-w-[700px] p-5 rounded-xl ">
+
+      <div className="text-center  border-2 shadow-lg group-hover:bg-white shadow-blue-100 w-fit mx-auto rounded-full px-10 py-3  flex items-center place-content-center space-x-2 text-lg ">
+        <span className="text-base">Order Id &nbsp;: </span>
+        <h1 className="font-semibold text-xl">
+          {order.order_id}
+        </h1>
       </div>
 
-      <div className="ml-auto mt-4">
-        <label htmlFor="order_id" className="mb-0.5 ml-1">Price</label>
-        <input
-          disabled={true}
-          type="text"
-          defaultValue={(order.price)?order.price:'--'}
-          className="form-input" />
+      <div className="flex my-2 flex-col lg:flex-row">
+        <div className="w-fit mr-auto">
+          <div className="text-center flex items-center place-content-start space-x-2 text-lg ">
+            <span className="text-base">To &nbsp; &nbsp; &nbsp; : </span>
+            <h1 className=" text-xl">
+              {order.to}
+            </h1>
+          </div>
+          <div className="text-center flex items-center place-content-start space-x-2 text-lg ">
+            <span className="text-base">From &nbsp;: </span>
+            <h1 className=" text-xl">
+              {order.from}
+            </h1>
+          </div>
+        </div>
+
+        <div className="w-fit ml-auto">
+          <div className="text-left flex items-center place-content-start space-x-2 text-lg ">
+            <span className="text-base">Quantity &nbsp;: </span>
+            <h1 className=" text-xl">
+              {order.quantity + ' ' + order.unit}
+            </h1>
+          </div>
+          <div className="text-left flex items-center place-content-start space-x-2 text-lg ">
+            <span className="text-base">Price &nbsp; &nbsp; &nbsp; : </span>
+            <h1 className=" text-xl">
+              {(order.price) ? (order.price) : ' -- '}
+            </h1>
+          </div>
+        </div>
       </div>
-      <div className="ml-auto mt-2">
-        <label htmlFor="order_id" className="mb-0.5 ml-1">Status</label>
-        <input
-          disabled={true}
-          type="text"
-          defaultValue={order.status}
-          className="form-input" />
-      </div>
-      <button className="w-20 ml-auto mt-4 p-2 text-center rounded-xl bg-green-600 font-semibold text-white">
+      {/* <h1 className="text-left">To &nbsp; &nbsp; &nbsp;: {order.to}</h1>
+      <h1 className="text-left">From : {order.from}</h1>
+      <h1 className="text-right">Quantity: {order.quantity + ' ' + order.unit}</h1>
+      <h1 className="text-right">Price: {(order.price) ? (order.price) : ' -- '}</h1> */}
+
+      <button
+        onClick={() => { setEditOrder(order) }}
+        name="btn"
+        className="w-fit  ml-auto mt-4 py-2 px-24 mx-auto hover:bg-green-600 text-center rounded-xl bg-green-500 font-semibold text-white">
         Edit
       </button>
+
     </div>
   )
   // return (

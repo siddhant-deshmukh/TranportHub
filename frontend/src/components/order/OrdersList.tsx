@@ -1,23 +1,25 @@
-import { useEffect, useState } from "react"
+// import { useEffect, useState } from "react"
 import { IOrder } from "../../types"
-import axios, { AxiosResponse } from "axios"
+// import axios, { AxiosResponse } from "axios"
 import Order from "./Order"
 
-const OrdersList = ({ ordersList, setOrdersList }: {
+const OrdersList = ({ ordersList,  setEditOrder, setOrderMsgs }: {
   ordersList: IOrder[],
-  setOrdersList: React.Dispatch<React.SetStateAction<IOrder[]>>
+  setOrdersList: React.Dispatch<React.SetStateAction<IOrder[]>>,
+  setEditOrder: React.Dispatch<React.SetStateAction<IOrder | null>>,
+  setOrderMsgs: React.Dispatch<React.SetStateAction<IOrder | null>>
 }) => {
 
   return (
-    <div className="overflow-y-auto h-full w-[55%]">
-      <ul className="flex flex-col space-y-2 overflow-y-auto min-h-fit "> 
-        {
-          ordersList.map((order) => {
-            return <Order key={order._id} order={order} />
-          })
-        }
-      </ul>
-    </div>
+
+    <ul className="flex flex-col space-y-2 overflow-y-auto min-h-fit ">
+      {
+        ordersList.map((order) => {
+          return <Order key={order._id} order={order} setEditOrder={setEditOrder} setOrderMsgs={setOrderMsgs}/>
+        })
+      }
+    </ul>
+
   )
 }
 

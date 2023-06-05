@@ -6,7 +6,7 @@ const NavBar = () => {
   const { user, setUser } = useContext(AppContext)
   const [btnToggle, setToggle] = useState<boolean>(true)
   return (
-    <div className='w-full min-h-fit px-10 items-center py-2 bg-blue-800 text-white flex justify-between'>
+    <div className='w-full h-fit px-10 items-center py-2 bg-blue-800 text-white flex justify-between'>
       <h1 className='text-2xl font-bold'>
         TransportHub
       </h1>

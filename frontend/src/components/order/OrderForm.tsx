@@ -7,6 +7,8 @@ const OrderForm = () => {
   const { user, transporters, setOrders, setModalType } = useContext(AppContext)
   const [errorMsg, setErrorMsg] = useState<string>('')
   const [transporterName, setTransporterName] = useState<string>('')
+  const [ loading, setLoading ] = useState<boolean>(false)
+
   //@ts-ignore
   const onFormSubmit = (event) => {
     event.preventDefault()
@@ -20,8 +22,9 @@ const OrderForm = () => {
     const transporter_value = event.target.elements?.transporter?.value
     const transporter_id = transporter_value.slice(0, transporter_value.indexOf('_'))
 
-
+    if(loading) return
     console.log(order_id, to, from, quantity, unit, address, transporter_id)
+    setLoading(true)
     axios.post(`${import.meta.env.VITE_API_URL}/order`, {
       order_id,
       to,
@@ -45,6 +48,8 @@ const OrderForm = () => {
       }).catch((err) => {
         console.error('While uploading order', err)
 
+      }).finally(()=>{
+        setLoading(false)
       })
   }
 

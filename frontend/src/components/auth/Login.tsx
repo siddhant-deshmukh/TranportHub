@@ -6,13 +6,15 @@ import { ErrorMsg } from "../others";
 const Login = () => {
   const { setUser } = useContext(AppContext)
   const [errorMsg,setErrorMsg] = useState<string>('')
-
+  const [loading, setLoading] = useState<boolean>(false)
   //@ts-ignore
   const onFormSubmit = (event) => {
     event.preventDefault();
     const email = event.target.elements?.email?.value
     const password = event.target.elements?.password?.value
+    if(loading) return 
 
+    setLoading(true)
     axios.post(`${import.meta.env.VITE_API_URL}/u/login-password`,{
       email,
       password, 
@@ -43,6 +45,9 @@ const Login = () => {
           setErrorMsg("Some error occured")
         }
         console.error("While login",err)
+      })
+      .finally(()=>{
+        setLoading(false)
       })
   }
 
@@ -75,6 +80,7 @@ const Login = () => {
       </div>
       <button
         type='submit'
+        disabled={loading}
         className="form-button w-full">
         Login
       </button>

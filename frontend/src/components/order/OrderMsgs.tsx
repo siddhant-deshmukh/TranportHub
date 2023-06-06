@@ -3,6 +3,7 @@ import AppContext from "../../AppContext"
 import { IMsg } from "../../types"
 import axios from "axios"
 import MsgList from "./MsgList"
+import { Spinner } from "../others"
 
 
 const OrderMsgs = () => {
@@ -10,10 +11,14 @@ const OrderMsgs = () => {
   const [msgs, setMsgs] = useState<IMsg[] | null>(null)
   const [newMsg, setNewMsg] = useState<string>('')
 
+  const [listLoading, setListLoading] = useState<boolean>(false)
+  const [newMsgLoading, setNewMsgLoading] = useState<boolean>(false)
+
   const uploadNewMsg = (newMsg: string) => {
     if (newMsg.length > 400 || newMsg.length < 1) return
     console.log("Sending!")
-    
+
+    setNewMsgLoading(true)
     axios.post(`${import.meta.env.VITE_API_URL}/msg/${selectedOrder?._id}`, { text: newMsg }, { withCredentials: true })
       .then(({ status, data }) => {
         console.log(status, data)
@@ -26,10 +31,13 @@ const OrderMsgs = () => {
         }
       }).catch((err) => {
         console.error('while uploading message', err)
+      }).finally(() => {
+        setNewMsgLoading(false)
       })
   }
 
   useEffect(() => {
+    setListLoading(true)
     axios.get(`${import.meta.env.VITE_API_URL}/msg/${selectedOrder?._id}`, { withCredentials: true })
       .then(({ status, data }) => {
         console.log('msgs', status, selectedOrder?._id, data)
@@ -39,6 +47,8 @@ const OrderMsgs = () => {
         }
       }).catch((err) => {
         console.error('while getting msgs', selectedOrder?._id, err)
+      }).finally(() => {
+        setListLoading(false)
       })
   }, [selectedOrder])
 
@@ -70,7 +80,7 @@ const OrderMsgs = () => {
 
       </div>
 
-      <MsgList msgs={msgs} />
+      <MsgList msgs={msgs} listLoading={listLoading} />
 
       <div
         className="flex h-fit items-center pr-3 py-2 rounded-lg bg-gray-50 dark:bg-gray-700">
@@ -83,10 +93,20 @@ const OrderMsgs = () => {
           maxLength={400}
           className="block mx-4 p-2.5 w-full text-base max-h-52 min-h-[46px] text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your message..."></textarea>
         <button
+          disabled={newMsgLoading}
           onClick={() => { uploadNewMsg(newMsg) }}
           className="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
-          <svg aria-hidden="true" className="w-6 h-6 rotate-90" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
-          <span className="sr-only">Send message</span>
+          {
+            !newMsgLoading &&
+            <>
+              <svg aria-hidden="true" className="w-6 h-6 rotate-90" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
+              <span className="sr-only">Send message</span>
+            </>
+          }
+          {
+            newMsgLoading &&
+            <Spinner />
+          }
         </button>
       </div>
     </div>

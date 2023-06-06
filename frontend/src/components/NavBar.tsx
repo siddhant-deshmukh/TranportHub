@@ -14,7 +14,7 @@ const NavBar = () => {
         {
           user && <div className='rounded-full'>
             <div className='absolute' hidden={!btnToggle}>
-
+              
             </div>
           </div>
         }

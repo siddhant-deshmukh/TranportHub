@@ -47,15 +47,7 @@ export const AppContextProvider = ({ children }) => {
       .then((data) => {
         if (data && data.user && data.user._id) {
           setUser(data.user)
-          if (data.user.user_type === 'manufacturer') {
-            axios.get(`${import.meta.env.VITE_API_URL}/u/transporters`, { withCredentials: true })
-              .then(({ status, data }) => {
-                setTransporters(data.data)
-                console.log(status, data.data)
-              }).catch((err) => {
-                console.error("While get/transporters list", err)
-              })
-          }
+          console.log('daata user', data.user.type)
         } else {
           setUser(null)
         }
@@ -65,6 +57,17 @@ export const AppContextProvider = ({ children }) => {
       })
   }, [])
 
+  useEffect(() => {
+    if (user?.user_type === 'manufacturer') {
+      axios.get(`${import.meta.env.VITE_API_URL}/u/transporters`, { withCredentials: true })
+        .then(({ status, data }) => {
+          setTransporters(data.data)
+          console.log(status, data.data)
+        }).catch((err) => {
+          console.error("While get/transporters list", err)
+        })
+    }
+  }, [user])
   return (
     <AppContext.Provider value={{
       transporters,

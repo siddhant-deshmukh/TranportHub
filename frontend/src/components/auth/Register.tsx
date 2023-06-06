@@ -7,6 +7,8 @@ const Register = () => {
 
   const [errorMsg, setErrorMsg] = useState<string>('')
   const { setUser } = useContext(AppContext)
+  const [loading, setLoading] = useState<boolean>(false)
+
   //@ts-ignore
   const onFormSubmit = (event) => {
     event.preventDefault();
@@ -16,7 +18,9 @@ const Register = () => {
     const password = event.target.elements?.password?.value
     const user_type = event.target.elements?.user_type?.value
 
+    if(loading) return 
     console.log(name, email, password, user_type)
+    setLoading(true)
     axios.post(`${import.meta.env.VITE_API_URL}/u/register`, {
       name,
       email,
@@ -46,6 +50,8 @@ const Register = () => {
           setErrorMsg('Some error occured')
         }
         console.error("While Register", err)
+      }).finally(()=>{
+        setLoading(false)
       })
   }
 
@@ -109,6 +115,7 @@ const Register = () => {
       </div>
       <button
         type='submit'
+        disabled={loading}
         className="form-button">
         Register
       </button>

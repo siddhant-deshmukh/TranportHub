@@ -14,6 +14,8 @@ const UpdateOrder = () => {
     selectedOrder, setOrders, 
     setModalType, setSelectedOrder 
   } = useContext(AppContext)
+  
+  const [loading, setLoading] = useState<boolean>(false)
 
   // const [transporterName, setTransporterName] = useState<string>('')
 
@@ -28,6 +30,9 @@ const UpdateOrder = () => {
     const unit = event.target.elements?.unit?.value
     const address = event.target.elements?.address?.value
     const price = event.target.elements?.price?.value
+
+    if(loading) return 
+    setLoading(true)
 
     console.log(to, from, quantity, unit, address)
     let updateData = {}
@@ -60,7 +65,8 @@ const UpdateOrder = () => {
         }
       }).catch((err) => {
         console.error('While uploading order', err)
-
+      }).finally(()=>{
+        setLoading(false)
       })
   }
   const onCancel = () => {
@@ -199,6 +205,7 @@ const UpdateOrder = () => {
             Cancel
           </button>
           <button
+            disabled={loading}
             type='submit'
             className="bg-blue-700 w-full p-2 text-center rounded-md">
             Update Order

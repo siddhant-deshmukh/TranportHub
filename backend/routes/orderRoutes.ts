@@ -10,32 +10,33 @@ import { addMsg } from './msgRoutes';
 dotenv.config();
 var router = express.Router();
 
-router.get('/', auth, async (req, res) => {
-  try {
-    const { skip , limit} = req.query
-    let skipNum = (skip && typeof skip === 'string' && parseInt(skip) && parseInt(skip) > 0)?parseInt(skip):0
-    let limitDocs = (limit && typeof limit === 'string' && parseInt(limit) && parseInt(limit) > 1 )?parseInt(limit):5
+router.get('/', auth,
+  async (req, res) => {
+    try {
+      const { skip, limit } = req.query
+      let skipNum = (skip && typeof skip === 'string' && parseInt(skip) && parseInt(skip) > 0) ? parseInt(skip) : 0
+      let limitDocs = (limit && typeof limit === 'string' && parseInt(limit) && parseInt(limit) > 1) ? parseInt(limit) : 5
 
-    if (res.user.user_type === 'manufacturer') {
-      const orders = await Order.find({manufacturer_id : res.user._id})
-        .sort({'last_activity':-1})
-        .skip(skipNum)
-        .limit(limitDocs)
-      return res.status(200).json({orders})
-    } else {
-      const orders = await Order.find({transporter_id : res.user._id})
-        .sort({'last_activity':-1})
-        .skip(skipNum)
-        .limit(limitDocs)
-      return res.status(200).json({orders}) 
+      if (res.user.user_type === 'manufacturer') {
+        const orders = await Order.find({ manufacturer_id: res.user._id })
+          .sort({ 'last_activity': -1 })
+          .skip(skipNum)
+          .limit(limitDocs)
+        return res.status(200).json({ orders })
+      } else {
+        const orders = await Order.find({ transporter_id: res.user._id })
+          .sort({ 'last_activity': -1 })
+          .skip(skipNum)
+          .limit(limitDocs)
+        return res.status(200).json({ orders })
+      }
+    } catch (err) {
+      return res.status(500).json({ msg: 'Some internal error occured', err })
     }
-  } catch (err) {
-    return res.status(500).json({ msg: 'Some internal error occured', err })
-  }
-})
+  })
 
 router.post('/', auth,
-  body('order_id').isString().trim().exists().isLength({max:5, min:1}).exists(),
+  body('order_id').isString().trim().exists().isLength({ max: 5, min: 1 }).exists(),
   body('title').optional().isString().isLength({ max: 100, min: 1 }).trim(),
   body('to').isString().isLength({ max: 100, min: 1 }).trim().exists(),
   body('from').isString().isLength({ max: 100, min: 1 }).trim().exists(),
@@ -50,13 +51,13 @@ router.post('/', auth,
       if (res.user.user_type === 'transporter')
         return res.status(405).json({ msg: 'transporter not allowed to create order' });
 
-      const { title, to, from, address, quantity, unit, price, transporter_id, order_id } : IOrderCreate = req.body
+      const { title, to, from, address, quantity, unit, price, transporter_id, order_id }: IOrderCreate = req.body
 
       const check_transporter = await User.findById(transporter_id)
       if (!check_transporter)
         return res.status(404).json({ msg: 'transporter not found' });
-      const check_order_id = await Order.find({order_id})
-      if(check_order_id.length > 0){
+      const check_order_id = await Order.find({ order_id })
+      if (check_order_id.length > 0) {
         return res.status(409).json({ msg: 'order_id already used' });
       }
 
@@ -78,21 +79,23 @@ router.post('/', auth,
       return res.status(500).json({ msg: 'Some internal error occured', err })
     }
   })
-router.get('/:_id', auth, async (req, res) => {
-  try {
-    const _id = req.params['_id']
-    if (!_id) return res.status(400).json({ msg: 'order id required' })
-    const check_order = await Order.findById(_id)
-    if (!check_order) return res.status(404).json({ msg: 'order not found' })
 
-    if (check_order.manufacturer_id.toString() != res.user._id.toString() && check_order.transporter_id?.toString() != res.user._id.toString())
-      return res.status(401).json({ msg: 'Not allowed' });
+router.get('/:_id', auth,
+  async (req, res) => {
+    try {
+      const _id = req.params['_id']
+      if (!_id) return res.status(400).json({ msg: 'order id required' })
+      const check_order = await Order.findById(_id)
+      if (!check_order) return res.status(404).json({ msg: 'order not found' })
 
-    return res.status(200).json({ msg: 'Successfull', order: check_order });
-  } catch (err) {
-    return res.status(500).json({ msg: 'Some internal error occured', err })
-  }
-})
+      if (check_order.manufacturer_id.toString() != res.user._id.toString() && check_order.transporter_id?.toString() != res.user._id.toString())
+        return res.status(401).json({ msg: 'Not allowed' });
+
+      return res.status(200).json({ msg: 'Successfull', order: check_order });
+    } catch (err) {
+      return res.status(500).json({ msg: 'Some internal error occured', err })
+    }
+  })
 
 router.put('/:_id',
   body('title').isString().isLength({ max: 100, min: 1 }).trim().optional(),
@@ -107,44 +110,45 @@ router.put('/:_id',
     try {
       const _id = req.params['_id']
       if (!_id) return res.status(400).json({ msg: 'order id required' })
-      
+
       const check_order = await Order.findById(_id)
       if (!check_order) return res.status(404).json({ msg: 'order not found' })
       if (check_order.manufacturer_id.toString() != res.user._id.toString() && check_order.transporter_id?.toString() != res.user._id.toString())
-      return res.status(401).json({ msg: 'Not allowed' });
+        return res.status(401).json({ msg: 'Not allowed' });
 
       const { title, to, from, address, quantity, unit, price } = req.body
-      if (res.user.user_type === 'transporter'){
-        if(title || to || from || address || quantity || unit)
+      if (res.user.user_type === 'transporter') {
+        if (title || to || from || address || quantity || unit)
           return res.status(405).json({ msg: 'Transporter can only change price of order' });
       } else {
-        if(price)
+        if (price)
           return res.status(405).json({ msg: 'Manufacturer can not edit price of order' });
       }
 
-      await Order.findByIdAndUpdate(_id,{
-        title, 
-        to, 
+      await Order.findByIdAndUpdate(_id, {
+        title,
+        to,
         from,
-        address, 
-        quantity, 
-        unit, 
+        address,
+        quantity,
+        unit,
         price,
-        last_activity : new Date()
+        last_activity: new Date()
       })
 
       let text = `${res.user.name} changed \n`
-      text += `${(quantity && unit && (quantity !== check_order.quantity || unit !== check_order.unit))?`quantity from ${check_order.quantity} ${check_order.unit} to ${quantity}  ${unit}`:``}\n` 
-      text += `${(address && address !== check_order.address)?`\naddress from \n\n${check_order.address}\n\n to \n${address}\n`:''}` 
-      text += `${(price && price !== check_order.price)?`price ${(check_order.price)?'from ${check_order.price}': ''}  to ${price} inr`:''}` 
+      text += `${(quantity && unit && (quantity !== check_order.quantity || unit !== check_order.unit)) ? `quantity from ${check_order.quantity} ${check_order.unit} to ${quantity}  ${unit}` : ``}\n`
+      text += `${(address && address !== check_order.address) ? `\naddress from \n\n${check_order.address}\n\n to \n${address}\n` : ''}`
+      text += `${(price && price !== check_order.price) ? `price ${(check_order.price) ? 'from ${check_order.price}' : ''}  to ${price} inr` : ''}`
 
-      addMsg(_id,res.user._id,text)
+      addMsg(_id, res.user._id, text)
 
-      return res.status(200).json({ msg: 'Successfull'});
+      return res.status(200).json({ msg: 'Successfull' });
     } catch (err) {
       return res.status(500).json({ msg: 'Some internal error occured', err })
     }
   })
+
 router.delete('/:_id', auth, (req, res) => {
 
 })

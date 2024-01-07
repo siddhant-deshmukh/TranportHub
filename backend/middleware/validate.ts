@@ -1,7 +1,5 @@
-import * as jwt from 'jsonwebtoken'
-import User from '../models/users';
-import { NextFunction, Request, Response } from 'express';
 import { validationResult } from 'express-validator';
+import { NextFunction, Request, Response } from 'express';
 
 const validate = async (req: Request, res: Response, next: NextFunction) => {
   try {

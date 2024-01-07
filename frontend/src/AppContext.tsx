@@ -45,12 +45,16 @@ export const AppContextProvider = ({ children }) => {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log("data", data)
         if (data && data.user && data.user._id) {
           setUser(data.user)
           console.log('daata user', data.user.type)
         } else {
+        
           setUser(null)
         }
+      }).catch(() => {
+        console.error("Error while fetching the user data")
       })
       .finally(() => {
         setAuthLoading(false)

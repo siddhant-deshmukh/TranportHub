@@ -1,11 +1,11 @@
-import auth from '../middleware/auth'
 import dotenv from 'dotenv';
-import express, { NextFunction, Request, Response } from 'express'
-import User, { IUserCreate, IUserStored } from '../models/users';
+import express from 'express'
 import { Types } from 'mongoose';
-import Order from '../models/order';
-import Msg from '../models/msg';
 import { body } from 'express-validator';
+
+import Msg from '../models/msg';
+import Order from '../models/order';
+import auth from '../middleware/auth'
 import validate from '../middleware/validate';
 
 dotenv.config();

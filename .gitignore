@@ -3,3 +3,5 @@
 node_modules
 .dist
 dist
+# Local Netlify folder
+.netlify

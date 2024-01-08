@@ -45,4 +45,21 @@ Libraries used:
 Improvement which can be done:
 1. Websocket libraries like socket.io can be used to update the data in real time.
 2. Styling can be improved
-3. Other types of databases can be used to store the messages effectively. (I have used the indexes to make the query faster but still MongoDB is not the ideal solution for it).
+3. Other types of databases can be used to store the messages effectively. (I have used the indexes to make the query faster but still MongoDB is not the ideal solution for it).   
+   
+
+# Working
+
+1. Open the url in two different browsers or one in incognito is also fine (as access toekn will be saved in session)
+2. In **Tab 1** ( Manufacturer ) :
+   1. While registration Fill details for example Indian Toys, toy@indiantoy.com, password, Chennai, India
+   2. ***Choose type `Manufacturer`***
+   3. Then register
+3. In **Tab 2** (Transporter):
+   1. While registration Fill defailt for example Chennai Shippers, chennai@shipper.com, password, Chennai, India
+   2. Choose type `Transporter`
+   3. Then register
+4. If some error occured ( deplyed server can be bussy then relogin again with same credentials)
+5. Then in the manufacturer you will see option to add order 
+6. Create the order while choosing the name of the Transporter
+7. Check the Transporter refresh the page ( as real time websocket is not implimented yet ) you will see the order
